@@ -1,0 +1,54 @@
+@import './_normalize.scss';
+
+body {
+    margin: 0 auto;
+    padding: 150px;
+    width: 25%;
+    color: #545454;
+    background: #fbfbfa;
+}
+
+h1 {
+    font-size: 20px;
+}
+
+form {
+    overflow: hidden;
+}
+
+input[type="text"] {
+    box-sizing: border-box;
+    display: block;
+    height: 60px;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 5px 10px;
+    font-size: 16px;
+}
+
+input[type="submit"] {
+    border: none;
+    padding: 15px 30px;
+    margin-bottom: 15px;
+    background: #3b3938;
+    color: #fff;
+    float: right;
+    cursor: pointer;
+
+    &:hover {
+        background: #111;
+    }
+}
+
+a {
+    display: block;
+    color: #545454;
+
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+.err_msg{
+    color: #ff4d4b;
+}
