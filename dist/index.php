@@ -1,5 +1,4 @@
 <?php
-
   error_reporting(E_ALL);
   ini_set('display_errors', 'On');
 
@@ -47,13 +46,33 @@
       }
 
       if(empty($err_msg)) {
+        // DBへの接続
+        $dsn = 'mysql:dbname=php_sample01;host:localhost;chrset=utf8';
+        $user = 'root';
+        $password = 'root';
+        $options = array(
+          // SQL実行時に例外をスロー
+          PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+          // デフォルトフェッチモードを連想配列形式に設定
+          PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+          // バッファードクエリを使う(一度に結果セットをすべて取得し、サーバーの負荷軽減)
+          // SELECTで得た結果に対してもrowCountメソッドを使えるようにする
+          PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true
+        );
+
+        // PDOオブジェクトを生成（DBへ接続）
+        $dbh = new PDO($dsn, $user, $password, $options);
+
+        // SQL文クエリを生成
+        $stmt = $dbh->prepare('INSERT INTO users (email, pass, login_time) VALUES (:email, :pass, :login_time)');
+
+        // プレースホルダーに値をセットし、SQL文を実行
+        $stmt->execute(array(':email' => $email, ':pass' => $pass, ':login_time' => date('Y:m-d H:i:s')));
+
         header('Location:mypage.php');
       }
     }
-
-    
   }
- 
 ?>
 
 <!DOCTYPE html>
@@ -69,13 +88,13 @@
     <h1>ユーザー登録</h1>
     <form action="" method="post">
         <span class="err_msg"><?php if(!empty($err_msg['email'])) echo $err_msg['email']; ?></span>
-        <input type="text" name="email" placeholder="email" value="<?php echo $_POST['email']; ?>">
+        <input type="text" name="email" placeholder="email" value="<?php if(!empty($_POST{'email'})) echo $_POST['email']; ?>">
 
         <span class="err_msg"><?php if(!empty($err_msg['pass'])) echo $err_msg['pass']; ?></span>
-        <input type="text" name="pass" placeholder="パスワード" value="<?php echo $_POST['pass']; ?>">
+        <input type="text" name="pass" placeholder="パスワード" value="<?php if(!empty($_POST{'pass'})) echo $_POST['pass']; ?>">
 
         <span class="err_msg"><?php if(!empty($err_msg['pass_retype'])) echo $err_msg['pass_retype']; ?></span>
-        <input type="text" name="pass_retype" placeholder="パスワード(再入力)" value="<?php echo $_POST['pass_retype']; ?>">
+        <input type="text" name="pass_retype" placeholder="パスワード(再入力)" value="<?php if(!empty($_POST{'pass_retype'})) echo $_POST['pass_retype']; ?>">
 
         <input type="submit" value="送信">
     </form>
